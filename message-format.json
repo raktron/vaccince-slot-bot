@@ -1,0 +1,8 @@
+{
+    "heading": "*Update*",
+    "nextLine": "\n",
+    "CentreBlock": "Centre: *[CENTRE]* , Pin: [PINCODE] \nAddress: [ADDRESS] \n",
+    "slotBlock": " Date: [DATE] \n Slots Available: *[SLOTS]* \n Age Group: [AGE] \n Vaccine: [VACCINE]",
+    "FeeType": "Fee Type: [FEE]",
+    "FeePrice": "Price: [FEE_PRICE] rs."
+}
