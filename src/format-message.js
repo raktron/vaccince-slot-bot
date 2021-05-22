@@ -11,7 +11,8 @@ const formatMessage = (centerInformation) => {
         updateMessage +=  message_format.nextLine
         updateMessage +=  message_format.slotBlock
             .replace("[DATE]", session.date.replace(/-/g, "\\-"))
-            .replace("[SLOTS]",session.slots)
+            .replace("[DOSE_1]",session.slots_dose_1)
+            .replace("[DOSE_2]",session.slots_dose_2)
             .replace("[AGE]", session.ageLimit)
             .replace("[VACCINE]",session.vaccine)
             updateMessage += message_format.nextLine

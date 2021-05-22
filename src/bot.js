@@ -6,7 +6,7 @@ const sendMessage = async (message) => {
     try{
         const URL = `${config.telegram.host}${config.telegram.botToken}/${config.telegram.methods.sendMessage}`
         const payload = {
-            chat_id: config.telegram.chatId.test,
+            chat_id: config.telegram.chatId.live,
             text: message,
             parse_mode: 'MarkdownV2'
         }

@@ -3,6 +3,8 @@ const axios = require('axios').default
 const queryString = require('querystring')
 const log = require('./log')
 
+const MINIMUM_AGE_LIMIT = 45
+
 const getISODate = () => {
     const currentDate = new Date()
     const DateString = `${currentDate.getDate()}-${currentDate.getMonth()+1}-${currentDate.getFullYear()}` 
@@ -12,11 +14,12 @@ const getISODate = () => {
 const formatSessions = ( sessions ) => {
     const condensedSessions = []
     for (const session of sessions) {
-        if(session.available_capacity > 0){
+        if(session.available_capacity > 0 && session.min_age_limit < MINIMUM_AGE_LIMIT){
             // Add more condition to filter session if required
             const newSession = {
                 date: session.date,
-                slots: session.available_capacity,
+                slots_dose_1: session.available_capacity_dose1,
+                slots_dose_2: session.available_capacity_dose2,
                 ageLimit: session.min_age_limit,
                 vaccine: session.vaccine
             }
