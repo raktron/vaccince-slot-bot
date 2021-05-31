@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "jest --forceExit"
+    "test": "jest --detectOpenHandles",
+    "test:ci": "jest --coverage --forceExit"
   },
   "repository": {
     "type": "git",
@@ -24,13 +25,14 @@
   },
   "homepage": "https://github.com/raktron/vaccine-slot-bot#readme",
   "dependencies": {
-    "axios": "^0.21.1",
-    "node-cron": "^3.0.0",
-    "node-json-db": "^1.3.0",
-    "querystring": "^0.2.1",
-    "simple-node-logger": "^18.12.24"
+    "axios": "~0.21.1",
+    "memory-cache": "~0.2.0",
+    "node-cron": "~3.0.0",
+    "node-json-db": "~1.3.0",
+    "querystring": "~0.2.1",
+    "simple-node-logger": "~18.12.24"
   },
   "devDependencies": {
-    "jest": "^27.0.3"
+    "jest": "~27.0.3"
   }
 }
