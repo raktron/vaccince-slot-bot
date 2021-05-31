@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Build
+name: Build and Deploy
 
 on:
   push:
@@ -13,7 +13,7 @@ env:
 
 
 jobs:
-  build:
+  build_and_deploy:
 
     runs-on: self-hosted
 
@@ -28,19 +28,10 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm i ----only=production
+    - run: npm i --only=production
+    - run: cp -r ./src ${{ env.deploy-folder }}
+    - run: cp -r ./package.json ${{ env.deploy-folder }}
+    - run: cp -r ./node_modules ${{ env.deploy-folder }}
+    - run: cp -r ${{ env.config-folder }}/config.json ${{ env.deploy-folder }}/config.json
   
-  deploy: 
 
-    runs-on: self-hosted
-    
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: cp -r ./src ${{ deploy-folder }}
-    - run: cp -r ./package.json ${{ deploy-folder }}
-    - run: cp -r ./node_modules ${{ deploy-folder }}
-    - run: cp -r ${{ config-folder }}/config.json ${{ deploy-folder }}/config.json
