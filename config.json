@@ -1,4 +1,4 @@
-// remove comments before running the application
+
 {
     "telegram":{
         "botToken": "<bot_token>",
@@ -14,10 +14,10 @@
     "cowin": {
         "byDistrictUrl" : "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict",
         "district": {
-            "district_name": 100    // <-- district Id
+            "district_name": 100    
         },
         "pincodes": [
-            10001, 10002   // --< pincodes you want to filter
+            10001, 10002  
         ]
     }
 }
