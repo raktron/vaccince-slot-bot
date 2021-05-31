@@ -1,5 +1,5 @@
 const config = require('../config.json')
-const axios = require('axios').default
+const axios = require('axios')
 const log = require('./log')
 
 const sendMessage = async (message) => {

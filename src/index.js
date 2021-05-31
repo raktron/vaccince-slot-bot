@@ -32,8 +32,8 @@ const process = async () => {
 
 // Polling rate kept at 5 minutes. 
 
-cron.schedule('*/5 * * * *', async () => {
-    log.info('running task every 5 mins')
+cron.schedule('*/30 * * * * *', async () => {
+    log.info('running task every 30 seconds')
     await process()
     log.info('process completed')
 })
