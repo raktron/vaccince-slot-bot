@@ -1,75 +1,71 @@
 const config = require('../config.json')
-const axios = require('axios').default
-const queryString = require('querystring')
 const log = require('./log')
+const Slot = require('./slot.class')
+const getSlotInformationByPin = require('./cowin-api')
 
 const MINIMUM_AGE_LIMIT = 45
+const MINIMUM_SLOT_CAPACITY = 4
+const MINIMUM_SLOT_CAPACITY_FOR_DOSE = 2
 
-const getISODate = () => {
-    const currentDate = new Date()
-    const DateString = `${currentDate.getDate()}-${currentDate.getMonth()+1}-${currentDate.getFullYear()}` 
-    return DateString;
-}
 
-const formatSessions = ( sessions ) => {
-    const condensedSessions = []
-    for (const session of sessions) {
-        if(session.available_capacity > 0 && session.min_age_limit < MINIMUM_AGE_LIMIT){
-            // Add more condition to filter session if required
-            const newSession = {
-                date: session.date,
-                slots_dose_1: session.available_capacity_dose1,
-                slots_dose_2: session.available_capacity_dose2,
-                ageLimit: session.min_age_limit,
-                vaccine: session.vaccine
+const convertCentersToSlots = (centers) => {
+    const slots = []
+
+    for (const center of centers) {
+        const centerName = center.name
+        const centerAddress = center.address
+        const centerPin = center.pincode
+        const centerId = center.center_id
+        if (config.cowin.pincodes.includes(center.pincode)) {
+            console.log('center', center)
+            for (const session of center.sessions) {
+                // if ((session.available_capacity > 4 || session.available_capacity_dose1 > 2 || session.available_capacity_dose2 > 2) && session.min_age_limit < 45) {
+                    if(true) {
+                    const slot = new Slot(
+                        centerName,
+                        centerAddress,
+                        centerPin,
+                        centerId,
+                        session.available_capacity,
+                        session.date,
+                        session.available_capacity_dose1,
+                        session.available_capacity_dose2,
+                        session.vaccine,
+                        center.fee_type,
+                        session.min_age_limit
+                    )
+                    slots.push(slot)
+                }
             }
-            condensedSessions.push(newSession)
+        }
+        else {
+            continue
         }
     }
-    return condensedSessions
-}
 
-const processSlotsInformation = (response) => {
-    const slots = []
-    for (const center of response.centers) {
-        const formattedSession = formatSessions(center.sessions)
-        if(config.cowin.pincodes.includes(center.pincode)){
-            const newCenter = {
-                id: center.center_id,
-                name: center.name,
-                addr: center.address,
-                pin: center.pincode,
-                sessions: formattedSession,
-                available : formattedSession.length > 0 ? formatSessions.length : false,
-                feeType: center.fee_type
-            }
-            slots.push(newCenter)
-        }
-    }   
+    
+
     return slots
 }
 
-const getSlotInfomation = async () => {
-    try{
-    const query = queryString.stringify({district_id: config.cowin.district.mysuru, date: getISODate()})
-    const headers = {
-        'Accept':'text/html,application/xhtml+xml,application/xml',
-        'Accept-Encoding':'gzip, deflate',
-        'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
-        'Accept-Charset':'ISO-8859-1',
-        'Origin':'https://www.cowin.gov.in',
-        'referer':'https://www.cowin.gov.in/'
-    }
-    const cowinResult = await axios.get(`${config.cowin.byDistrictUrl}?${query}`,{headers})
-    const slots = processSlotsInformation(cowinResult.data)
-    const availableSlots = slots.filter(slot => slot.available > 0)
-    log.info(`App connected to cowin and got ${slots.length} records`)
 
-    return availableSlots
+const getSlotInfomation = async () => {
+    const currentDate = new Date()
+    const nextWeek = new Date(new Date().setDate(new Date().getDate() + 7))
+
+    const calendarByPins = []
+
+    for (const pin of config.cowin.pincodes) {
+        calendarByPins.push(...await getSlotInformationByPin(pin, currentDate))
+        calendarByPins.push(...await getSlotInformationByPin(pin, nextWeek))
     }
-    catch(error){
-        log.error('Failed to connect with cowin apis',error)
-    }
+
+    const slots = convertCentersToSlots([ ...calendarByPins]) || []
+
+    log.info(`Available slots length ${slots.length}`)
+
+    return slots
+
 }
 
 

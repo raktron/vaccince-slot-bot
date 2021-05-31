@@ -25,4 +25,20 @@ describe('Testing bot.js', () => {
             expect(error).toEqual('boom')
         }
     })
+
+    it('should send out message to telegram bot' , async () => {
+        const message = 'This is a test message'
+
+        axios.post.mockImplementation((url, payload) => {
+            expect(payload.message).toEqual('This is a test message')
+            return Promise.resolve({})
+        })
+
+        log.info.mockImplementation(() => {})
+        log.error.mockImplementation(() => {})
+       
+        
+        sendMessage(message)
+        
+    })
 })
