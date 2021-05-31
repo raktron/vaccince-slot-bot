@@ -40,7 +40,7 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cp -r ./src ${{ deploy-folder }}
-    - run: cp -r ./package.json ${{ deploy-folder }}
-    - run: cp -r ./node_modules ${{ deploy-folder }}
-    - run: cp -r ${{ config-folder }}/config.json ${{ deploy-folder }}/config.json
+    - run: cp -r ./src ${{ env.deploy-folder }}
+    - run: cp -r ./package.json ${{ env.deploy-folder }}
+    - run: cp -r ./node_modules ${{ env.deploy-folder }}
+    - run: cp -r ${{ env.config-folder }}/config.json ${{ env.deploy-folder }}/config.json
